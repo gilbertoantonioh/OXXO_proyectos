@@ -1,0 +1,162 @@
+SELECT (select attribute1
+        from po_requisition_headers_all
+        where requisition_header_id = prl.requisition_header_id) sol_inver,
+mmt.transaction_set_id transaction_set_id,
+PRL.ATTRIBUTE2  CR_PLAZA, 
+PRL.ATTRIBUTE3 CR_TIENDA, 
+prl.TAX_CODE_ID tax_code_id,
+/* Inicio CO_51967670*/
+-- mmt.transaction_source_id  move_order,
+ooh.order_number move_order,
+/* Fin CO_51967670*/
+mmt.TRANSACTION_DATE TXN_date, 
+--mmt.source_line_id  Move_line,      -- 13/05/2015   Alfredo Salgado (Gonet)    51927085   Se reemplaza MMT.SOURCE_LINE_ID
+mmt.trx_source_line_id  Move_line,  -- 13/05/2015   Alfredo Salgado (Gonet)    51927085   Se agrega  MMT.TRX_SOURCE_LINE_ID
+mmt.distribution_account_id  Account, 
+msi.segment1    Articulo, 
+msi.attribute1 tipo_uso,
+msi.description Description, 
+abs(mmt.transaction_quantity)  Quantity, 
+mmt.actual_cost cost,
+--trunc(cic.item_cost,3) cost, 
+(abs(mmt.transaction_quantity)*mmt.actual_cost)  cost_Line,
+mmt.organization_id organization_id,
+/* Inicio CO_51967670*/
+--MTH.DESCRIPTION Num_Req
+prh.segment1  Num_Req
+/* Fin CO_51967670*/
+--Inicio ChO 52070105
+, msi.attribute2 clave_af
+-- Inicia CHO CHG0036798
+, REPLACE(CONVERT(ffv.description,'UTF8'),CHR(15712189),'') descr_af
+-- Termina CHO CHG0036798
+, msi.attribute7 gpo_kit
+--Termina ChO 52070105
+-- Inicia CHO CHG0038685
+,(
+SELECT DISTINCT wts.trip_id
+FROM   WSH_DELIVERY_LEGS wdl
+       ,WSH_TRIP_STOPS wts
+WHERE  1=1
+AND    wdl.pick_up_stop_id = wts.stop_id
+AND    wdl.delivery_id in (SELECT DISTINCT wda.delivery_id
+                          FROM   WSH_DELIVERY_ASSIGNMENTS WDA
+                                 , WSH_DELIVERY_DETAILS WDD
+                          WHERE  1=1
+                          AND    WDA.DELIVERY_DETAIL_ID = WDD.DELIVERY_DETAIL_ID
+                          AND    WDD.SOURCE_HEADER_NUMBER = ooh.order_number
+                          AND WDD.source_line_id = ool.line_id
+                         )
+) viaje
+-- Termina CHO CHG0038685
+--Inicia CHG0049881 
+, tras.ORD_NUM 
+, tras.FACT_NUM 
+, tras.REL_NUM     
+--Fin CHG0049881
+-- Inicia CHG0135802
+, sol.full_name solicitante
+-- Termina CHG0135802
+FROM mtl_material_transactions mmt, 
+cst_item_costs cic, 
+cst_cost_types cct,         
+mtl_system_items msi, 
+/* Inicio CO_51967670*/
+--MTL_TXN_REQUEST_LINES MTR,
+apps.oe_order_lines_all ool,
+apps.oe_order_headers_all ooh,
+po_requisition_headers_all prh,
+/* Fin CO_51967670*/
+PO_REQUISITION_LINES_ALL   PRL,
+MTL_TRANSACTION_TYPES MTT
+/* Inicio CO_51967670*/
+--MTL_TXN_REQUEST_HEADERS MTH
+/* Fin CO_51967670*/
+--Inicio ChO 52070105
+, apps.fnd_flex_value_sets fvs
+, apps.fnd_flex_values_vl ffv
+--Termina ChO 52070105
+--Inicio CHG0049881
+, (SELECT rdl.requisition_line_id 
+       , PHA.segment1             ORD_NUM S
+       , rcv.ATTRIBUTE1           FACT_NUM 
+       , pra.release_num          REL_NUM
+    FROM apps.po_req_distributions_all  RDL
+       , apps.po_distributions_all      pdi
+       , apps.po_lines_all              pla
+       , apps.po_headers_all            pha
+       , apps.rcv_transactions          rcv
+       , apps.po_releases_all           pra
+    WHERE 1=1 --rdl.requisition_line_id
+     AND rdl.distribution_id     = pdi.req_distribution_id
+     AND pdi.po_line_id          = pla.po_line_id
+     AND pla.po_header_id        = pha.po_header_id
+     AND rcv.po_header_id        = pha.po_header_id
+     AND rcv.po_line_id          = pla.po_line_id
+     AND rcv.po_distribution_id  = pdi.po_distribution_id
+     AND rcv.TRANSACTION_TYPE    = 'DELIVER'
+     AND rcv.po_header_id        = pra.po_header_id(+)
+     AND rcv.po_release_id       = pra.po_release_id(+) ) tras
+--Fin CHG0049881
+, apps.per_people_f sol --CHG0135802
+WHERE 
+mmt.transaction_type_id  =  mtt.transaction_type_id
+/* Inicio CO_51967670*/
+--AND upper(mtt.transaction_type_name) like 'MOVE%ORDER%ISSUE'
+AND    mtt.transaction_type_id = 33
+AND    mtt.transaction_action_id = 1
+AND    mtt.transaction_source_type_id = 2
+/* Inicio CO_51967670*/
+AND    cic.inventory_item_id  =   mmt.inventory_item_id 
+AND    cic.organization_id =   mmt.organization_id 
+AND    cic.cost_type_id  =   cct.cost_type_id
+AND    cct.cost_type like 'Promedio' 
+AND    msi.inventory_item_id  =   mmt.inventory_item_id 
+/*Inicio CO_51967670*/
+--AND    MTR. ORGANIZATION_ID =   MMT.ORGANIZATION_ID
+AND    mmt.transaction_reference= to_char(ooh.header_id)
+/*Fin  CO_51967670*/
+AND    msi.organization_id =   mmt.organization_id 
+/*Inicio CO_51967670*/
+---AND    MTR.INVENTORY_ITEM_ID =   MMT.INVENTORY_ITEM_ID 
+---AND    MTR.ATTRIBUTE1  =   PRL.REQUISITION_LINE_ID 
+--AND    MMT.SOURCE_LINE_ID =   MTR.LINE_ID         -- 13/05/2015   Alfredo Salgado (Gonet)    51927085   Se reemplaza MMT.SOURCE_LINE_ID 
+---AND    MMT.TRX_SOURCE_LINE_ID =   MTR.LINE_ID  -- 13/05/2015   Alfredo Salgado (Gonet)    51927085   Se agrega  MMT.TRX_SOURCE_LINE_ID 
+---AND    MTH.HEADER_ID = mmt.transaction_source_id   
+-- Parametros : Transacción, Requisición, Artículo, CR superior, Rango de Fechas  
+---AND    mmt.transaction_source_id   =   nvl(:p_move_header,mmt.transaction_source_id)
+AND    ooh.order_number   =   nvl(:p_move_header,ooh.order_number)--:p_move_header
+AND     ooh.header_id = ool.header_id
+AND     ool.attribute1 = prl.requisition_line_id
+AND     prh.requisition_header_id = prl.requisition_header_id
+AND     ooh.attribute2 = prh.requisition_header_id
+AND     ool.inventory_item_id = mmt.inventory_item_id 
+AND     mmt.trx_source_line_id = ool.line_id
+/*Fin  CO_51967670*/
+AND    mmt.organization_id   =  :p_org_id
+/*Inicio  CO_51967670*/
+---AND    MTH.DESCRIPTION      = nvl(:p_num_req,MTH.DESCRIPTION)
+AND    prh.segment1      = nvl(:p_num_req,prh.segment1)
+/*Fin  CO_51967670*/
+AND    msi.attribute1                 = nvl(:p_tipo_uso, msi.attribute1)
+AND    msi.inventory_item_id    = nvl(:p_item_id,msi.inventory_item_id)
+AND    PRL.ATTRIBUTE2       = nvl(:p_cr_plaza,PRL.ATTRIBUTE2)
+AND    PRL.ATTRIBUTE3       = nvl(:p_cr_tienda,PRL.ATTRIBUTE3)
+AND    trunc(mmt.TRANSACTION_DATE) between nvl(:p_from_date,trunc(mmt.TRANSACTION_DATE)) 
+and     nvl(:p_to_Date,trunc(mmt.TRANSACTION_DATE))
+--Inicia Cho 52070105
+AND    msi.attribute2 = ffv.flex_value
+AND    fvs.flex_value_set_id  = ffv.flex_value_set_id
+AND    ffv.enabled_flag = 'Y'
+AND    fvs.flex_value_set_name = 'XXINV_AF_CLAVES'
+AND    ffv.PARENT_FLEX_VALUE_LOW = msi.attribute1
+--Termina ChO 52070105
+--Inicio CHG0049881
+AND    prl.requisition_line_id = tras.requisition_line_id(+)
+--Fin    CHG0049881
+--Inicia CHG0135802
+AND sol.person_id = prl.to_person_id
+AND (sol.effective_end_date >= SYSDATE OR sol.effective_end_date IS NULL)
+AND (sol.effective_start_date <= SYSDATE)
+-- Termina CHG0135802
+ORDER BY ooh.order_number, PRL.ATTRIBUTE2,PRL.ATTRIBUTE3,msi.segment1

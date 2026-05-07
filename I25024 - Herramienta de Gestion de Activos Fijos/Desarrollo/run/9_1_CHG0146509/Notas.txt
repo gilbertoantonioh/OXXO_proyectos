@@ -1,0 +1,9 @@
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/tree/hotfix-I25024-mvp2-CHG0146509
+
+
+
+========================================================================================================================== 
+1. HotFix to main  
+16 de Abril 2026 
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/188

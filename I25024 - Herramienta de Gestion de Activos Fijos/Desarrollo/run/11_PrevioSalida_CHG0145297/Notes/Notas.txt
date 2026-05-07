@@ -1,0 +1,135 @@
+
+Repositorio: ORA_EBS_MEX_DB_XXINV
+Rama: BUS-BackOffice/ORA_EBS_MEX_DB_XXINV at hotfix-I25024-mvp2-CHG0145297
+
+
+
+
+	 
+1. Correr script que limpia un dia de informacion. 	 
+2. Usuario de Interfaces POINV  / PO17FAA_INTERFACES (Respo) 	 
+3. Revisar tabla de precios 	 
+	 
+XXINV: Creacion de transacciones contables en resumen
+		--> XXINV_GL_TRANSFER_SUM
+			--> XXINV_KITS_CUENTAS_DIARIO.main
+			
+Pedido OM 186393
+Linea:		Viaje: 			Item Number:			Cantidad:
+5798117     3878165			24786					10
+5798118     3878165			33288					1
+5798119     3878165			24785					21		
+5798120     3878165			24787					4
+
+
+
+INSERT INTO xxfc_sn_escaneo (
+    sn_escaneo_id,
+    sn_viaje,
+    purchase_order,
+    item_number,
+    faa_serial_number,
+    quantity,
+    po_unit_price,
+    faa_tag_number
+)
+    SELECT
+        SN_ESCANEO_ID_SEQ.NEXTVAL,
+        '3878165' sn_viaje,
+        RH_HEADER_ID,
+        msi_segment1_no_articulo,
+        RL_LINE_ID,
+        mmt_transaction_quantity, 
+        ROUND((MMT_ACTUAL_COST),2),
+        RL_LINE_ID
+    FROM xxinv_material_transactions
+    WHERE trunc(mmt_creation_date) = '13-NOV-2024'
+	and   rh_header_id = '186393';
+	
+Pedido PO 2414779
+
+DECLARE
+  l_return_status VARCHAR2 (1000);
+  l_msg_data      VARCHAR2 (1000);
+  CURSOR c1
+  IS
+    SELECT *
+    FROM po_headers_all
+    WHERE segment1            IN ('2414779' )
+    AND  ORG_ID = 85
+    AND type_lookup_code       = 'STANDARD'
+    AND (authorization_status != 'APPROVED'
+    OR authorization_status   IS NULL );
+    
+BEGIN
+ --  mo_global.init ('PO');
+   fnd_global.apps_initialize (9600, 54802, 201);
+  
+   FOR i IN c1
+   LOOP
+      po_document_action_pvt.do_approve (p_document_id      => i.po_header_id, 
+                                         p_document_type    => 'PO', 
+                                         p_document_subtype => 'STANDARD', 
+                                         p_note             => '– Your comments that need TO be displayed IN action History', 
+                                         p_approval_path_id => 62, 
+                                         x_return_status    => l_return_status, 
+                                         x_exception_msg    => l_msg_data 
+                                         );
+      DBMS_OUTPUT.put_line (l_return_status);
+      COMMIT;
+   END LOOP;
+END;
+
+--- Para todos los items 
+update xxfc_sn_escaneo set po_unit_price = 82865.82
+where item_number = '33288' 
+;
+
+update xxfc_sn_escaneo_lineas set po_unit_price = 82865.82, purchase_order = '2414779'
+where item_number = '33288' 
+;
+
+
+
+
+Delete from APPS.FA_MASS_ADDITIONS
+where create_batch_date = '13-NOV-2024'
+AND FEEDER_SYSTEM_NAME ='ALMACEN';
+
+-- Validar los siguientes deletes
+-----------------------------------------
+DELETE FROM XXINV_PRE_MATERIAL_TRX_TEMP;
+
+
+DELETE FROM XXINV_MATERIAL_TRX_TEMP;
+
+DELETE FROM apps.XXINV_CTRL_FA_MASS_ADDITIONS
+WHERE  TRUNC (creation_date) = '13-NOV-2024';
+
+DELETE FROM   apps.xxinv_issue_fixed_asset_web
+WHERE    TRUNC (creation_date) = '13-NOV-2024';
+
+DELETE FROM apps.XXINV_CHANGE_ITEM_ATTRIBUTE_KC
+WHERE trunc(CHANGE_DATE)  between  '10-NOV-2024' and '17-NOV-2024';
+
+
+DELETE FROM XXFC.XXINV_KIT_ITEMS_DIARIO
+WHERE TRUNC(CREATION_DATE) = '13-NOV-2024';
+
+
+DELETE FROM apps.xxinv_material_transactions
+WHERE TRUNC(MMT_CREATION_DATE) =  '13-NOV-2024';
+
+
+UPDATE  apps.mtl_material_transactions 
+        SET  attribute10          =  'R12 Upg'
+               ,attribute11          =  '13-NOV-2024'
+               ,attribute14          =  'R12 Upg'
+               ,attribute15          =  '20240221999'
+--SELECT * FROM  apps.mtl_material_transactions 
+WHERE  trunc(creation_date) = '13-NOV-2024'
+AND   transaction_type_id = 33 --33-change Sales order issue WMS 23-03-17
+AND    transaction_action_id = 1
+AND    transaction_source_type_id = 2 --2-change Sales order issue WMS 23-03-17
+AND    organization_id           =   93
+AND    actual_cost IS NOT NULL ;

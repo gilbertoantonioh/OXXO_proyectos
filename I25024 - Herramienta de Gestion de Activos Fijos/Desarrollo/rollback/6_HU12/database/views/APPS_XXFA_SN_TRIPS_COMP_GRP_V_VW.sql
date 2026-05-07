@@ -1,0 +1,3 @@
+SET DEFINE OFF
+PROMPT DROP VIEW APPS.XXFA_SN_TRIPS_COMP_GRP_V
+DROP VIEW apps.xxfa_sn_trips_comp_grp_v ;

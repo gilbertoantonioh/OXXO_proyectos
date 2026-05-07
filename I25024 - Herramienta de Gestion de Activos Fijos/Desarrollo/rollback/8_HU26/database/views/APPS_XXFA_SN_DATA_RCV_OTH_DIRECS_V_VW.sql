@@ -1,0 +1,3 @@
+SET DEFINE OFF
+PROMPT DROP VIEW APPS.XXFA_SN_DATA_RCV_OTH_DIRECS_V
+DROP VIEW apps.xxfa_sn_data_rcv_oth_direcs_v;

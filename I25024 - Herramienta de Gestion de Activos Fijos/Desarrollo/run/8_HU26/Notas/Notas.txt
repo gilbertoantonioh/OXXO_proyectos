@@ -1,0 +1,181 @@
+BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA at feature-I25024-mvp2-CHG0140503
+ 
+APPS_XXFA_SN_DATA_RCV_OTHERS_PKG_PKS.pks
+APPS_XXFA_SN_DATA_RCV_OTHERS_PKG_PKB.pkb
+APPS_XXFA_SN_DATA_API_PKG_PKS.pks
+APPS_XXFA_SN_DATA_API_PKG_PKB.pkb
+
+BUS-BackOffice/ORA_EBS_MEX_DB_Views at feature-I25024-mvp2-CHG0140503
+APPS_XXFA_SN_DATA_RCV_OTH_DIRECS_V_VW.sql
+ 
+
+BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_INV at feature-I25024-mvp2-CHG0140503
+APPS_XXFC_INV_REPORTE_ALMACEN_PKG_PKB.pkb
+
+
+
+2. paso desktop 
+3. colocar el repo, clonarlo antes 
+3.1 Cambiar al branch de feature 
+4. Menu Branch, New Branch:  wip-I25024-MVP2-CHG0140503-ORA_EBS_MEX_DB_XXFC_FA  DESDE FEATURE                   (min 9)
+5. Dar click en Publish Branch
+6. Homologar la wip a desarrollo. Menu Branch, Merge into current branch, seleccionamos origin/develop dar Click en Create a merge commit
+7. Resolver conflictos, tenemos que resolver la homogacion. Accept Incoming
+8. Despues de resolver conflictos, se da Continue Merge
+9. Le damos Push 
+10. Hacemos el PR solo de homolgacion hcia la feature 
+11. Luego se va a crear otra wip ya homologada con nuestros cambios. 
+
+REPOSITORIOS
+ORA_EBS_MEX_DB_XXFC_FA
+ORA_EBS_MEX_DB_Views
+
+==========================================================================================================================
+CHG0140503	
+1. PR from wip to feature Homologacion                          PR de Homologación para tener el wip de trabajo para la HU26.
+13 Feb 2026
+wip-I25024-MVP2-CHG0140503-ORA_EBS_MEX_DB_XXFC_FA				
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/144
+
+wip-I25024-MVP2-CHG0140503-ORA_EBS_MEX_DB_Views                 
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/121
+
+18 Feb 2026
+wip-I25024-MVP2-CHG0140503-ORA_EBS_MEX_DB_XXFC_INV
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_INV/pull/19
+==========================================================================================================================
+2. PR from wip to feature 
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/146
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/122        Closed. 
+
+18 Feb 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/123
+
+19 Feb 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_INV/pull/20
+
+==========================================================================================================================
+3. PR from feature to develop 
+19 Feb 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/154
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/124
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_INV/pull/21
+
+
+==========================================================================================================================
+3. PR from develop to staging 
+19 Feb 2026
+
+Homologacion de wip a feature 
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/155
+
+23 Feb 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/156
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/126
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_INV/pull/22
+
+
+4. PR from statging to main 
+9 de Marzo 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_INV/pull/23
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/166
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/145
+
+ 
+
+==========================================================================================================================
+
+FNDLOAD apps/M4y12#D3s4#21 0 Y UPLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_ATTRIBUTE13_FFD.ldt 
+FNDLOAD apps/M4y12#D3s4#21 0 Y UPLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_ATTRIBUTE16_FFD.ldt 
+FNDLOAD apps/M4y12#D3s4#21 0 Y UPLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_ATTRIBUTE17_FFD.ldt 
+FNDLOAD apps/M4y12#D3s4#21 0 Y UPLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_COMPILE_FFD.ldt
+
+CHG0140503	
+FNDLOAD apps/M4y12#D3s4#21 O Y DOWNLOAD $FND_TOP/patch/115/import/afcpprog.lct XXFA_SN_RCV_DATA_CP.ldt PROGRAM APPLICATION_SHORT_NAME="XXFC" CONCURRENT_PROGRAM_NAME="XXFA_SN_RCV_DATA"
+FNDLOAD apps/M4y12#D3s4#21 0 Y DOWNLOAD $FND_TOP/patch/115/import/afffload.lct XXFC_RCV_FA_ORIGENES_VS.ldt VALUE_SET FLEX_VALUE_SET_NAME="XXFC_RCV_FA_ORIGENES_VS"
+FNDLOAD apps/M4y12#D3s4#21 0 Y DOWNLOAD $FND_TOP/patch/115/import/afffload.lct XXFA_SN_RCV_OTROS_DEPURA_DIAS_RESGUARDO_VS.ldt VALUE_SET FLEX_VALUE_SET_NAME="XXFA_SN_RCV_OTROS_DEPURA_DIAS_RESGUARDO"
+FNDLOAD apps/M4y12#D3s4#21 O Y DOWNLOAD $FND_TOP/patch/115/import/afscprof.lct XXFC_RCV_FA_ORIGENES_PRF.ldt PROFILE PROFILE_NAME="XXFC_RCV_FA_ORIGENES" APPLICATION_SHORT_NAME="XXFC"
+
+FFD: 
+FNDLOAD apps/M4y12#D3s4#21 0 Y DOWNLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_ATTRIBUTE13_FFD.ldt DESC_FLEX APPLICATION_SHORT_NAME="INV" DESCRIPTIVE_FLEXFIELD_NAME="MTL_SYSTEM_ITEMS" APPLICATION_COLUMN_NAME="ATTRIBUTE13"
+FNDLOAD apps/M4y12#D3s4#21 0 Y DOWNLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_ATTRIBUTE16_FFD.ldt DESC_FLEX APPLICATION_SHORT_NAME="INV" DESCRIPTIVE_FLEXFIELD_NAME="MTL_SYSTEM_ITEMS" APPLICATION_COLUMN_NAME="ATTRIBUTE16"
+FNDLOAD apps/M4y12#D3s4#21 0 Y DOWNLOAD $FND_TOP/patch/115/import/afffload.lct MTL_SYSTEM_ITEMS_ATTRIBUTE17_FFD.ldt DESC_FLEX APPLICATION_SHORT_NAME="INV" DESCRIPTIVE_FLEXFIELD_NAME="MTL_SYSTEM_ITEMS" APPLICATION_COLUMN_NAME="ATTRIBUTE17"
+
+
+XXFA - SN Actualiza Informacion de Tablas Intermedias desde la Recepcion de Almacen
+XXFA_SN_RCV_DATA
+
+Juego de valores existente: PO_RCV_RECEIPT_NUMBER
+
+XXFC_RCV_RECEIPT_NUMBER_BY_ORGANIZATION
+
+Grupo de Solicitudes All Inclusive GUI/Inventory
+
+XXFA_SN_RCV_OTHERS_PURGE
+
+XXFA_SN_WSH_PURGE_TRIPS
+
+XXFA_SN_RCV_OTROS_DEPURA_DIAS_RESGUARDO_VS
+XXFA_SN_VIAJES_DEPURA_DIAS_RESGUARDO_VS
+
+
+MXOXXO-IN17FAA-Almacen Adquisiciones
+
+
+Profile: XXFC_RCV_FA_ORIGENES
+XXFC IN Origenes de Recepcion de Activo Fijo 
+
+SQL="SELECT fvv.description \"Log Enabled\", fvv.flex_value
+into :visible_option_value,
+:profile_option_value
+FROM   fnd_flex_value_sets fvs
+     , fnd_flex_values_vl fvv 
+WHERE  fvs.flex_value_set_id     = fvv.flex_value_set_id
+AND    fvs.flex_value_set_name   = 'XXFC_RCV_FA_ORIGENES_VS'
+AND    fvv.enabled_flag          = 'Y'
+AND  ( fvv.start_date_active <= SYSDATE OR fvv.start_date_active IS NULL)
+AND  ( fvv.end_date_active >= SYSDATE OR fvv.end_date_active IS NULL)
+ORDER BY 2"
+
+COLUMN="\"Log Enabled\"(40)"
+
+
+SQL="SELECT MEANING \"Log Enabled\", LOOKUP_CODE
+into :visible_option_value,
+:profile_option_value
+from fnd_lookups
+where lookup_type = 'YES_NO'"
+COLUMN="\"Log Enabled\"(30)"
+
+
+
+
+XXFC_RCV_FA_ORIGENES_VS
+Origenes de Recepcion de Activo Fijo
+
+MANUAL		MANUAL			Alta Manual de Activos
+ALMACEN		ALMACEN			Alta de Inventario								SI??
+TRASPASO	TRASPASO		Alta por Traspaso
+MAS_POLIZA	MAS_POLIZA		Altas masivas con poliza contable
+MASIVA		MASIVA			Altas por medio de interfaz masiva
+INICIAL		INICIAL			Carga Inicial
+DIRECTOS	DIRECTOS		Cargos Directos									SI 
+HANDHELD	HANDHELD		HANDHELD
+PERSONAL	Personal		Personal Property
+REAL		Real			Real Property
+
+
+
+XXFC RCV FA ORIGEN
+ALMACEN		ALMACEN			Alta de Inventario	
+DIRECTOS	DIRECTOS		Cargos Directos
+VIRTUALES   VIRTUALES       Virtuales
+
+
+
+MXOXXO-PO10VCZ-Compras-32DGW
+	Menu: Órdenes de Compra Plaza
+	Nombre Interno: PO-COMPRAS-PLAZA 
+MXOXXO-PO17FAA-Requisiciones de Compra
+	Funcion: Resumen Solicitudes Internas
+	Nombre Interno: PO_POXRQVRQ

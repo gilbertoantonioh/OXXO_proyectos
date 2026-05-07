@@ -1,0 +1,26 @@
+=================================================================================
+                       Información General
+=================================================================================
+1. Nombre de la aplicación: I25024-Herramienta de Gestión de Activo Fijos
+2. Instancia: Oracle Finanzas México
+3. Change Order: CHG0101039
+4. Autor: Martin Verdeja Linares
+5. Fecha de Creacion: 20 Agosto de 2025
+
+=================================================================================
+                       Pre-requisitos para Instalación
+=================================================================================
+N/A
+
+=================================================================================
+                       Pasos de Instalación
+=================================================================================
+Pasos a seguir:  
+	1: Iniciar sesion en el servidor de aplicaciones del Oracle EBS, en instancia de Oracle Finanzas Mexico (12.2.4)
+	2: Copiar al servidor en modo BINARIO el archivo CHG0101039_3.zip
+	3: Descomprimir el archivo con el siguiente comando:
+		   unzip -a -o CHG0101039_3.zip
+	4: En el servidor de aplicaciones, ejecutar el instalador
+		   cd CHG0101039_3
+		   . CHG0101039_3_setup.ksh
+	   

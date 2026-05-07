@@ -1,0 +1,192 @@
+
+
+
+========================================================================================================================== 
+1. HotFix to main  
+24 de abril 2026 
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/194
+
+
+
+
+========================================================================================================================== 
+
+PO: 2414777, 2414778
+Item: 13979
+
+
+FNDLOAD apps/M4y12#D3s4#21 O Y DOWNLOAD $FND_TOP/patch/115/import/afcpprog.lct XXFA_SN_PO_OTH_VALIDATE_CD_CP.ldt PROGRAM APPLICATION_SHORT_NAME="XXFC" CONCURRENT_PROGRAM_NAME="XXFA_SN_PO_OTH_VALIDATE_CD"
+
+
+Programa Concurrente:
+XXFA - SN Validacion de Orden de Compra Cargos Directos 
+XXFA_SN_PO_OTH_VALIDATE_CD
+
+XXFA_SN_PO_OTH_VALIDATE_PKG
+	cd_prc
+
+
+
+Juego de valores:
+XXPO_PURCHASE_ORDER_ID
+
+XXPO_RELEASE_ID
+WHERE po_header_id = :$FLEX$.XXPO_PURCHASE_ORDER_ID
+	
+	
+
+para actualizar podemos usar le campo global_attribute20 en las dos tablas. 
+
+xxfa_sn_po_oth_validate_cd
+
+XXFA_SN_PO_OTH_VALIDATE_CD
+	USE_ITEM_TYPE_04
+	USE_ITEM_TYPE_06	
+
+
+
+	IF PROFILE RCV_CD
+	THEN
+		SELECT PO/RELEASE
+		
+		log(PO/RELEASE)
+		
+		IF ATTR1 FE FALSE 
+	       ATTR1 FE: SIN VALOR 
+		   lb_warning 
+		ELSE 
+		   ATTR1 FE: VALOR 
+		
+		IF ATTR2 FE FALSE
+	       ATTR2 FE: SIN VALOR 
+		   lb_warning
+		ELSE 
+		   ATTR2 FE: VALOR  
+		   
+
+		IF ATTR3 FE FALSE
+	       ATTR3 FE: SIN VALOR 
+		   lb_warning
+		ELSE 
+		   ATTR3 FE: VALOR  
+	
+		IF CATEG FA FALSE
+	       CATEG FA: SIN VALOR 
+		   lb_warning
+		ELSE 
+		   CATEG FA: VALOR 	
+	
+		IF lb_warning
+			UPDATE PO ATTR1 = N 
+			status = 1 
+		ELSE
+			UPDATE PO ATTR1 = Y 
+			status = 0			
+	ELSE
+		NO PUEDES VALIDAR PO SI NO TIENES PERFIL DE CARGOS DIRECTOS 
+	
+	END 
+
+
+///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+Validacion sobre SI
+XXFCCFCC.fmb			XXFC-Captura de Facturas de Cargos Centrales
+	del boton se pasa al XXFCCFCC_PKG.actualiza_cc
+	manda llamar a XXFC_VALIDA_SOLINV
+	y aqui hace un commit form
+	
+
+
+
+select *
+from  xxfc_solinv_cargocen
+	
+invoice_id							este es el header id de xxfc_cargo_central_headers
+si_number
+total_amount                        monto en MXN (convierten a tipo de cambio para otras monedas)               
+creation_date
+wm_sent_date                        cuando la insertan es NULL                
+wm_run_id                           cuando la insertan es NULL
+wm_status_val                       cuando la insertan es L
+wm_status_exec                      cuando la insertan es NULL
+status_actualizacion                cuando la insertan es NULL
+grupo						        Si hay una SI entonces es 1, numero de SI. 		
+qty_affected                        cuando la insertan es NULL  
+invoice_number 
+
+	   SELECT xxfc_ccl.header_id
+		      ,xxfc_ccl.Inversion_Num                                       Solicitud_Inversion
+				,ROUND(((SUM(NVL(xxfc_ccl.atributo1, 0))) +
+				        (SUM(xxfc_ccl.costo_unitario) + SUM(NVL(varios, 0))
+						  ) * ( (xxfc_ccl.tax_rate/100)+1)
+						 ), 2)                                                  Costo_Total
+				,TRUNC(xxfc_ccl.creation_date)                                Creation_Date
+				,xxfc_cch.invoice_num                                         Invoice_Num
+				,xxfc_cch.atributo1                                           Divisa
+				,xxfc_cch.atributo2                                           Tipo_Cambio
+		FROM   xxfc_cargo_central_Headers xxfc_cch
+		      ,xxfc_cargo_central_Lines   xxfc_ccl
+		WHERE  xxfc_cch.org_id    = xxfc_ccl.org_id
+		AND    xxfc_cch.Header_Id = xxfc_ccl.header_Id
+		AND    xxfc_ccl.header_id = p_Header_Id
+		AND    xxfc_ccl.org_id    = p_Org_Id
+		AND    xxfc_ccl.Inversion_Num IS NOT NULL
+		GROUP BY xxfc_ccl.header_id
+		        ,xxfc_cch.invoice_num
+		        ,xxfc_ccl.Inversion_Num
+				  ,TRUNC(xxfc_ccl.creation_date)
+				  ,xxfc_ccl.tax_rate
+				  ,xxfc_cch.atributo1
+				  ,xxfc_cch.atributo2;
+				  
+50 Campo Flujo Aprobacion Obligatorio 
+Condicion:
+
+:PO_HEADERS.ATTRIBUTE4 IS NULL 
+AND (SELECT COUNT(1) 
+     FROM xxfc_po_wfoc_compradores xpwc, per_people_f pepf, fnd_flex_value_sets ffvs, fnd_flex_values ffva, xxfc_maestro_de_crs_v xmcv 
+	 WHERE pepf.person_id=:PO_HEADERS.AGENT_ID 
+	 AND pepf.employee_number=TO_CHAR(xpwc.employee_number) 
+	 AND ffvs.flex_value_set_name='XXFC_WF_PLAZAS_AME' 
+	 AND ffva.flex_value_set_id=ffvs.flex_value_set_id 
+	 AND ffva.enabled_flag='Y' 
+	 AND ffva.flex_value=xmcv.oracle_cr_superior 
+	 AND xmcv.oracle_ef=:PO_HEADERS.ATTRIBUTE1 
+	 AND NVL(xpwc.tipo_comprador,'X') IN ('Sin Excepción','X') 
+	 AND ffva.flex_value=xpwc.cr_plaza 
+	 AND TRUNC(SYSDATE) BETWEEN NVL(ffva.start_date_active, TRUNC(SYSDATE)) AND NVL(ffva.end_date_active, TRUNC(SYSDATE)))=0 
+	 AND :PO_HEADERS.TYPE_LOOKUP_CODE IN ('STANDARD','PLANNED') 
+	 AND :SYSTEM.RECORD_STATUS IN ('CHANGED','INSERT')
+AND (SELECT COUNT(1) 
+     FROM xxfc_po_wfoc_compradores xpwc, per_people_f pepf, fnd_flex_value_sets ffvs, fnd_flex_values ffva,xxfc_maestro_de_crs_v xmcv 
+	 WHERE pepf.person_id=:PO_HEADERS.AGENT_ID
+     AND pepf.employee_number=TO_CHAR(xpwc.employee_number) 
+	 AND ffvs.flex_value_set_name='XXFC_WF_PLAZAS_AME' 
+	 AND ffva.flex_value_set_id=ffvs.flex_value_set_id 
+	 AND ffva.enabled_flag='Y' 
+	 AND NVL(xpwc.tipo_comprador,'X') NOT IN ('Sin Excepción','X') 
+	 AND ffva.flex_value=xpwc.cr_plaza 
+	 AND ffva.flex_value=xmcv.oracle_cr_superior 
+	 AND xmcv.oracle_ef=:PO_HEADERS.ATTRIBUTE1 
+	 AND TRUNC(SYSDATE) BETWEEN NVL(ffva.start_date_active, TRUNC(SYSDATE)) AND NVL(ffva.end_date_active, TRUNC(SYSDATE)))=0
+AND (SELECT NVL(ffva.enabled_flag,'N') 
+     FROM fnd_flex_value_sets ffvs, fnd_flex_values ffva, xxfc_maestro_de_crs_v xmcv 
+	 WHERE 1=1 AND ffvs.flex_value_set_name = 'XXFC_WF_PLAZAS_AME' 
+	 AND ffva.flex_value_set_id=ffvs.flex_value_set_id
+     AND ffva.enabled_flag='Y' 
+	 AND ffva.flex_value=xmcv.oracle_cr_superior 
+	 AND xmcv.oracle_ef=:PO_HEADERS.ATTRIBUTE1 
+	 AND xmcv.oracle_cr_type='P' 
+	 AND TRUNC(SYSDATE) BETWEEN NVL(ffva.start_date_active, TRUNC(SYSDATE)) AND NVL(ffva.end_date_active, TRUNC(SYSDATE)))='Y'
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 
+	 

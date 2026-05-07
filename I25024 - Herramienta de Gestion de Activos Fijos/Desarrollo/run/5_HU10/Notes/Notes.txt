@@ -1,0 +1,177 @@
+HU10
+
+
+
+==========================================================================================================================
+CHG0135592_1
+1. PR from wip to feature
+27 Diciembre 2025
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/95
+APPS_XXFA_SN_DATA_API_PKG_PKS.pks
+APPS_XXFA_SN_DATA_API_PKG_PKB.pkb
+APPS_XXFA_SN_TRIPS_PKG_PKS.pks
+APPS_XXFA_SN_TRIPS_PKG_PKB.pkb
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Triggers/pull/14
+APPS_XXFA_WSH_TRIPS_SN_AI_TRG.trg
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/91
+APPS_XXFA_SN_TRIPS_V_VW.sql
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2. PR from feature to develop
+30 Diciembre 2025
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/99#issuecomment-3700834785
+
+29 Diciembre 2025
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Triggers/pull/15#issuecomment-3697163372
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/92#issuecomment-3697167090
+
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+3. PR from develop to staging
+
+
+31 Diciembre 2025
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/106#issuecomment-3702935063
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Triggers/pull/17#issuecomment-3702837394
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/96#issuecomment-3702879228
+
+
+
+4. PR from cherrypick to main
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/125
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Triggers/pull/27
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/106 
+
+
+
+==========================================================================================================================
+
+
+ORA_EBS_MEX_DB_XXFC_FA
+ORA_EBS_MEX_DB_Triggers
+ORA_EBS_MEX_DB_views
+ORA_EBS_MEX_Shells
+
+
+CHG0135592 HU-10-EBS | Envío de Viajes del Almacén Central a ServiceNow
+
+
+Como encargado del viaje, quiero enviar desde Oracle EBS la información de los viajes creados en el almacén central, para que ServiceNow pueda controlar la información de los embarques asegurando que estén completos los escaneos.
+
+
+XXFA - SN Actualiza Informacion de Viajes WSH 
+XXFA_SN_WSH_TRIPS
+
+Actualiza informacion de viajes que sera compartida con Service Now
+
+
+MXOXXO-OM17FAA-PROGRAMADOR EMBARQUE FRM
+All WMS Reports
+
+
+FNDLOAD apps/M4y12#D3s4#21 O Y DOWNLOAD $FND_TOP/patch/115/import/afcpprog.lct XXFA_SN_WSH_TRIPS_CP.ldt PROGRAM APPLICATION_SHORT_NAME="XXFC" CONCURRENT_PROGRAM_NAME="XXFA_SN_WSH_TRIPS"
+FNDLOAD apps/M4y12#D3s4#21 O Y DOWNLOAD $FND_TOP/patch/115/import/afcpprog.lct XXFA_SN_WSH_PURGE_TRIPS_CP.ldt PROGRAM APPLICATION_SHORT_NAME="XXFC" CONCURRENT_PROGRAM_NAME="XXFA_SN_WSH_PURGE_TRIPS"
+FNDLOAD apps/M4y12#D3s4#21 0 Y DOWNLOAD $FND_TOP/patch/115/import/afffload.lct XXFA_SN_VIAJES_DEPURA_DIAS_RESGUARDO_VS.ldt VALUE_SET FLEX_VALUE_SET_NAME="XXFA_SN_VIAJES_DEPURA_DIAS_RESGUARDO"
+
+
+XXFA_SN_VIAJES_DEPURA_DIAS_RESGUARDO
+Dias de resguardo de informacion de viajes para compartir a Service Now durante el proceso de depuracion
+
+
+XXFA_SN_TRIPS 
+
+
+
+- wst_trip_name o id - Previo Salida (número de viaje)
+- Nombre de Artículo
+- Clave de Artículo
+- Cantidad / unidades del artículo
+- Número de Salida (es el pedido que realizó la tienda)
+- ID del Pedido
+- ID de línea del pedido
+- Status de Confirmación de Envío del Viaje (Y/N)
+
+
+
+sn_trip_id                     NUMBER                   - Versión del viaje en EBS (consecutivo que va aumentando conforme se envía archivo)        
+wst_trip_name                  VARCHAR2(30)             - wst_trip_name o id - Previo Salida (número de viaje)
+msi_item_description           VARCHAR2(240)            - Nombre de Artículo
+msi_item_number                VARCHAR2(40)             - Clave de Artículo
+wdd_shipped_quantity           NUMBER                   - Cantidad / unidades del artículo
+ooh_order_number               NUMBER                   - Número de Salida (es el pedido que realizó la tienda)
+ooh_header_id                  NUMBER                   - ID del Pedid
+ool_line_id                    NUMBER                   - ID de línea del pedido    
+ship_confirmed_flag            VARCHAR2(1)              - Status de Confirmación de Envío del Viaje (Y/N)
+
+
+CA 10.1.5 - El archivo CSV generado se ha de llamar: ebs_sn_viaje[NumeroDeViaje].csv
+
+
+ebs_sn_viaje_995016.csv
+
+sn_trip_detail_id 
+sn_trip_id 
+wst_trip_id       
+wst_trip_name     
+msi_item_number
+msi_item_description
+wdd_shipped_quantity
+ooh_header_id     
+ooh_order_number  
+ool_line_id       
+ship_confirmed_flag        when wt_status_Code = C  then Y otherwise N 
+wnd_confirm_date            
+wt_status_Code              
+wdd_released_status
+
+
+
+wdd.status
+Not Applicable (Code X)  
+Not Ready for Release (Code N)
+Ready for Release (Code R)
+Submitted to Warehouse (Code S)
+Staged (Code Y)
+Backordered (Code B)
+Shipped (Code C)
+Cancelled (Code D)
+
+
+Trip status codes - OP - Open, IT - In -transit, CL - Closed
+
+
+wsh vs sn 
+IF p_trip_name is not null 
+then    
+    u
+else 
+    when trip_status_code = CL                Cerrado en EBS
+    and exists ship_confirmed_flag N          No Cerrado aun en SN 
+        u 
+    when trip_status_code != CL               No Cerrado en EBS  
+    and exists XXFA_SN_TRIPS                  Existe en SN 
+        u 
+    when not exists XXFA_SN_TRIPS             No Existe en SN 
+        i 
+        
+sn vs wsh
+    when sn not exists WSH
+        d   
+		
+		
+Pruebas
+PO 2414765			30 piezas
+SO 202346			30 piezas
+
+articulo 19216
+
+viaje1 3924136		
+viaje2 3924137
+
+
+
+PO 2414766
+Articulos: 13171, 17846

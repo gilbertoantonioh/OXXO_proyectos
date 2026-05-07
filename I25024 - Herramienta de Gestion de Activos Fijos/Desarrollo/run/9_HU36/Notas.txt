@@ -1,0 +1,21 @@
+ORA_EBS_MEX_DB_XXFC_FA
+
+APPS_XXFA_SN_DATA_API_PKG_PKB.pkb
+
+ORA_EBS_MEX_Shell
+	XXFA_SN_WSH_TRIPS_BIN.ksh
+	
+	
+
+CHG0143308
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/tree/hotfix-I25024-mvp2-CHG0143308
+ 
+ 
+========================================================================================================================== 
+1. HotFix to main  
+12 de Marzo 2026 
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/172
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_Shell/pull/172

@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8" ?> 
+<!-- Data Template : XXFC_INVREAV    .. Del Reporte XXFC-Reporte de Entradas de Almacén (Valorizaciones)-->
+<!-- Creado por :    Daniel Vazquez (GNarus)                                             -->
+<!-- Fecha :         19-Abril-2017                                                               -->
+<!-- Change Order:   XXXXX                                                                    -->
+<!-- Instancia :     OXXO                                                 				     -->
+<!-- + + + + + + + + + + + +  -->
+<!-- Historial de Cambios :                                      -->
+<!-- Modificado por:                                             -->
+<!-- Fecha :                                                     -->
+<!-- Desc Cambio :                                               -->
+<dataTemplate name="XXFC_INVREAV" defaultPackage="APPS.XXFC_INV_REPORTE_ALMACEN_PKG" version="1.0">
+<properties>
+	<property name="xml_tag_case" value="upper" />
+	</properties>
+	
+	<parameters>
+		<parameter name="pn_OrgId"       dataType="Number"></parameter>
+		<parameter name="pn_ProveedorId" dataType="Number"></parameter>
+		<parameter name="pn_SucursalId"  dataType="Number"></parameter>
+		<parameter name="pn_ShipmentId"  dataType="Number"></parameter>
+		<parameter name="pn_Proveedor"   dataType="Number"></parameter>
+		<parameter name="pn_Sucursal"    dataType="Number"></parameter>
+		<parameter name="pn_ReceiptNum"  dataType="Number"></parameter>
+	</parameters>
+	
+	<lexicals>
+	</lexicals>
+	
+	<dataQuery>
+		<sqlStatement name="Q_QUERY">
+			<![CDATA[
+                &gv_query
+			]]>
+		</sqlStatement>
+	</dataQuery>
+		
+    <dataTrigger name="beforeReportTrigger" source="APPS.XXFC_INV_REPORTE_ALMACEN_PKG.xxfc_inv_beforereport_fnc"/> 
+		
+	<dataStructure>
+		<group name="G_DATOS" dataType="varchar2" source="Q_QUERY">
+			<element name="PROVEE" dataType="varchar2" value="PROVEE"/>
+			<element name="PROVEE_NO" dataType="varchar2" value="PROVEE_NO"/>
+			<element name="INVOICE_NUM" dataType="varchar2" value="INVOICE_NUM"/> 
+			<element name="SITE" dataType="varchar2" value="SITE"/>
+			<element name="PO_NUMBER" dataType="varchar2" value="PO_NUMBER"/>
+			<element name="HEADER_ID" dataType="varchar2" value="HEADER_ID"/>
+			<element name="RECEIPT_NUM" dataType="varchar2" value="RECEIPT_NUM"/>
+			<element name="RELEASE_NUM" dataType="varchar2" value="RELEASE_NUM"/>
+			<element name="ARTICULO" dataType="varchar2" value="ARTICULO"/>
+			<element name="DESCRIPTION" dataType="varchar2" value="DESCRIPTION"/>
+			<element name="FECHA" dataType="varchar2" value="FECHA"/>
+			<element name="UNIDS" dataType="varchar2" value="UNIDS"/>
+			<element name="TASA" dataType="varchar2" value="TASA"/>
+			<element name="DIVISA_RCV" dataType="varchar2" value="DIVISA_RCV"/>
+			<element name="TIPO_CAMBIO" dataType="varchar2" value="TIPO_CAMBIO"/>
+			<element name="DIVISA" dataType="varchar2" value="DIVISA"/>
+			<element name="PRECIO" dataType="varchar2" value="PRECIO"/>
+			<element name="PRECIO_DIVISA" dataType="varchar2" value="PRECIO_DIVISA"/>
+			<element name="SUBTOTAL" dataType="varchar2" value="SUBTOTAL"/>
+			<element name="IMPUES" dataType="varchar2" value="IMPUES"/>
+			<element name="TOTAL" dataType="varchar2" value="TOTAL"/>
+		</group>
+		<element name="NOM_REP" dataType="varchar2" value="APPS.XXFC_INV_REPORTE_ALMACEN_PKG.xxfc_inv_nombre_reporte_fnc"/>
+		<element name="NOMBRE_PROOV" dataType="varchar2" value="APPS.XXFC_INV_REPORTE_ALMACEN_PKG.xxfc_inv_nombre_proveedor_fnc"/>
+	</dataStructure>
+	
+</dataTemplate>

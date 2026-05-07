@@ -1,0 +1,30 @@
+SET SERVEROUTPUT ON
+SET DEFINE OFF;
+PROMPT APPS.AD_ZD_TABLE.DROP_TABLE XXFA_SN_DATA_DETAILS, XXFA_SN_FE_DATA_DETAILS
+DECLARE
+lv_dropped	VARCHAR2(100);
+lv_message	VARCHAR2(100);  
+BEGIN
+  APPS.AD_ZD_TABLE.DROP_TABLE('XXFC', 'XXFA_SN_DATA_DETAILS', 'DROP TABLE XXFC.XXFA_SN_DATA_DETAILS',NULL,lv_dropped);
+  IF lv_dropped = 'Y' THEN
+    lv_message := 'DROP TABLE XXFA_SN_DATA_DETAILS EXITOSO!';
+  ELSE
+    lv_message := 'DROP TABLE XXFA_SN_DATA_DETAILS FALLO!';
+  END IF;
+  dbms_output.put_line(lv_message); 
+
+
+  APPS.AD_ZD_TABLE.DROP_TABLE('XXFC', 'XXFA_SN_FE_DATA_DETAILS', 'DROP TABLE XXFC.XXFA_SN_FE_DATA_DETAILS',NULL,lv_dropped);
+  IF lv_dropped = 'Y' THEN
+    lv_message := 'DROP TABLE XXFA_SN_FE_DATA_DETAILS EXITOSO!';
+  ELSE
+    lv_message := 'DROP TABLE XXFA_SN_FE_DATA_DETAILS FALLO!';
+  END IF;
+  dbms_output.put_line(lv_message);    
+
+exception
+when others then
+   dbms_output.put_line('Error en AD_ZD_TABLE.DROP_TABLE '||SUBSTR(SQLERRM,1,200)); 
+END;
+/
+SHOW ERRORS;

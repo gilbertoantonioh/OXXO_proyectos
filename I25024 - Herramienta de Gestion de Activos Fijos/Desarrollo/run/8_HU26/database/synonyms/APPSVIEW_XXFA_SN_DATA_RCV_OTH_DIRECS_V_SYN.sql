@@ -1,0 +1,3 @@
+SET DEFINE OFF;
+PROMPT CREATE SYNONYM appsview.xxfa_sn_data_rcv_oth_direcs_v
+CREATE OR REPLACE SYNONYM appsview.xxfa_sn_data_rcv_oth_direcs_v FOR apps.xxfa_sn_data_rcv_oth_direcs_v;

@@ -1,0 +1,15 @@
+echo "Cargando archivo Template $3"
+#
+java oracle.apps.xdo.oa.util.XDOLoader UPLOAD \
+-DB_USERNAME apps \
+-DB_PASSWORD `echo "$CONNECT_STRING" | cut -c6-${#CONNECT_STRING}` \
+-JDBC_CONNECTION $JDBC_CON_DB_SERVER \
+-LOB_TYPE TEMPLATE_SOURCE \
+-LOB_CODE $1 \
+-APPS_SHORT_NAME $2 \
+-LANGUAGE en \
+-FILE_CONTENT_TYPE 'application/rtf' \
+-XDO_FILE_TYPE RTF \
+-FILE_NAME $3 \
+-NLS_LANG SPANISH_MEXICO.WE8MSWIN1252 \
+-CUSTOM_MODE FORCE  

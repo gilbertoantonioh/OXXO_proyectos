@@ -1,0 +1,96 @@
+--TRIGGERS FOR PACKAGEXXFA_SN_CONTROL_PKG
+
+
+/*-----------------------------------------------------------------------------
+ *----------------TRIGGERS FOR XxfaSnControl---------------
+ *-----------------------------------------------------------------------------*/
+
+
+--TRIGGER ON_LOCK
+DECLARE
+	v_errors VARCHAR(500);
+	v_retcode NUMBER;
+	v_alert_id ALERT;
+	v_alert_ret NUMBER;
+BEGIN
+	XXFA_SN_CONTROL_PKG.lock_row(
+			:XXFA_SN_CONTROL.ROW_ID
+			, :XXFA_SN_CONTROL.DATA_CONTROL_ID
+			, :XXFA_SN_CONTROL.DATA_SOURCE_ID
+			, :XXFA_SN_CONTROL.DATA_SOURCE_CODE
+			, :XXFA_SN_CONTROL.DATA_FILE_NAME
+			, :XXFA_SN_CONTROL.LAST_UPDATE_LOGIN
+			, v_errors, v_retcode);
+	IF (v_retcode != 0) THEN
+		v_alert_id := FIND_ALERT('ERROR_ALERT');
+		SET_ALERT_PROPERTY(v_alert_id, ALERT_MESSAGE_TEXT, v_errors);
+		v_alert_ret := SHOW_ALERT(v_alert_id);
+		RAISE FORM_TRIGGER_FAILURE;
+	END IF;
+END;
+
+
+--TRIGGER ON_UPDATE
+DECLARE
+	v_errors VARCHAR(500);
+	v_retcode NUMBER;
+	v_alert_id ALERT;
+	v_alert_ret NUMBER;
+BEGIN
+	XXFA_SN_CONTROL_PKG.update_row(:XXFA_SN_CONTROL.DATA_CONTROL_ID
+			, :XXFA_SN_CONTROL.DATA_SOURCE_ID
+			, :XXFA_SN_CONTROL.DATA_SOURCE_CODE
+			, :XXFA_SN_CONTROL.DATA_FILE_NAME
+			, :XXFA_SN_CONTROL.LAST_UPDATE_LOGIN
+			, v_errors, v_retcode);
+	IF (v_retcode != 0) THEN
+		v_alert_id := FIND_ALERT('ERROR_ALERT');
+		SET_ALERT_PROPERTY(v_alert_id, ALERT_MESSAGE_TEXT, v_errors);
+		v_alert_ret := SHOW_ALERT(v_alert_id);
+		RAISE FORM_TRIGGER_FAILURE;
+	END IF;
+END;
+
+
+--TRIGGER ON_INSERT
+DECLARE
+	v_rowid ROWID;
+	v_errors VARCHAR(500);
+	v_retcode NUMBER;
+	v_alert_id ALERT;
+	v_alert_ret NUMBER;
+BEGIN
+	XXFA_SN_CONTROL_PKG.insert_row(v_rowid
+			, :XXFA_SN_CONTROL.DATA_CONTROL_ID
+			, :XXFA_SN_CONTROL.DATA_SOURCE_ID
+			, :XXFA_SN_CONTROL.DATA_SOURCE_CODE
+			, :XXFA_SN_CONTROL.DATA_FILE_NAME
+			, :XXFA_SN_CONTROL.LAST_UPDATE_LOGIN
+			, v_errors, v_retcode);
+	:XXFA_SN_CONTROL.ROW_ID = v_rowid;
+ 
+	IF (v_retcode != 0) THEN
+		v_alert_id := FIND_ALERT('ERROR_ALERT');
+		SET_ALERT_PROPERTY(v_alert_id, ALERT_MESSAGE_TEXT, v_errors);
+		v_alert_ret := SHOW_ALERT(v_alert_id);
+		RAISE FORM_TRIGGER_FAILURE;
+	END IF;
+END;
+
+
+--TRIGGER ON_DELETE
+DECLARE
+	v_errors VARCHAR(500);
+	v_retcode NUMBER;
+	v_alert_id ALERT;
+	v_alert_ret NUMBER;
+BEGIN
+	XXFA_SN_CONTROL_PKG.delete_row(:XXFA_SN_CONTROL.DATA_CONTROL_ID
+			, v_errors, v_retcode);
+	IF (v_retcode != 0) THEN
+		v_alert_id := FIND_ALERT('ERROR_ALERT');
+		SET_ALERT_PROPERTY(v_alert_id, ALERT_MESSAGE_TEXT, v_errors);
+		v_alert_ret := SHOW_ALERT(v_alert_id);
+		RAISE FORM_TRIGGER_FAILURE;
+	END IF;
+END;

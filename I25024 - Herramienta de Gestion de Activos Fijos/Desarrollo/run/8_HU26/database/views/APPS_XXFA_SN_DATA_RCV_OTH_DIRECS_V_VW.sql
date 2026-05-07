@@ -1,0 +1,143 @@
+SET DEFINE OFF
+PROMPT VIEW APPS.XXFA_SN_DATA_RCV_OTH_DIRECS_V
+CREATE OR REPLACE FORCE VIEW apps.xxfa_sn_data_rcv_oth_direcs_v
+(
+  data_rcv_other_id              
+, rcv_transaction_id             
+, sn_transaction_id              
+, rcv_source_code                
+, rcv_destination_type_code      
+, rcv_trx_date_as_date         
+, rcv_transaction_date  
+, rcv_primary_unit_of_measure    
+, rcv_shipment_header_id         
+, rsh_receipt_num                
+, rcv_shipment_line_id           
+, rsl_shipment_line_num          
+, rsl_item_id                    
+, msi_item_number                
+, msi_use_type                   
+, msi_fa_code                    
+, rsl_item_description           
+, msi_sat_code                   
+, msi_asset_badgeable_flag       
+, msi_asset_seriable_flag        
+, msi_cfdi_use                   
+, mic_item_category_id           
+, mic_item_categ_seg_concat      
+, mic_item_categ_fam             
+, mic_item_categ_subfam          
+, faa_asset_category_id          
+, fcb_asset_categ_descr          
+, fcb_asset_categ_seg_concat     
+, fcb_asset_categ                
+, fcb_asset_subcateg             
+, fcb_asset_categ_fam            
+, fcb_asset_categ_fakey          
+, rcv_quantity                   
+, rcv_po_unit_price              
+, rcv_currency_code              
+, rcv_currency_conversion_rate   
+, rcv_currency_conversion_date   
+, ap_org_company_name            
+, ap_org_company_rfc             
+, pol_oracle_cia                 
+, pol_oracle_ef                  
+, pol_oracle_cr_superior         
+, pol_retek_distrito             
+, pol_oracle_cr                  
+, rcv_po_header_id               
+, poh_po_number                  
+, poh_po_date                    
+, rcv_po_release_id              
+, pra_release_num                
+, rcv_po_line_id                 
+, pol_po_line_num                
+, rcv_vendor_id                  
+, asu_vendor_number              
+, asu_vendor_name                
+, rcv_vendor_site_id             
+, ass_vendor_site_code           
+, rcv_inv_organization_id        
+, mtl_inv_organization_code      
+, poh_org_id                     
+, hou_org_code                   
+, rcv_invoice_num                
+, creation_date                  
+, created_by                     
+, last_update_date               
+, last_updated_by                
+, last_update_login              
+)
+AS 
+SELECT  data_rcv_other_id              
+      , rcv_transaction_id             
+      , sn_transaction_id              
+      , rcv_source_code                
+      , rcv_destination_type_code      
+      , rcv_transaction_date AS rcv_trx_date_as_date         
+      , TO_CHAR(rcv_transaction_date, 'YYYY-MM-DD') AS rcv_transaction_date  
+      , rcv_primary_unit_of_measure    
+      , rcv_shipment_header_id         
+      , rsh_receipt_num                
+      , rcv_shipment_line_id           
+      , rsl_shipment_line_num          
+      , rsl_item_id                    
+      , msi_item_number                
+      , msi_use_type                   
+      , msi_fa_code                    
+      , rsl_item_description           
+      , msi_sat_code                   
+      , msi_asset_badgeable_flag       
+      , msi_asset_seriable_flag        
+      , msi_cfdi_use                   
+      , mic_item_category_id           
+      , mic_item_categ_seg_concat      
+      , mic_item_categ_fam             
+      , mic_item_categ_subfam          
+      , faa_asset_category_id          
+      , fcb_asset_categ_descr          
+      , fcb_asset_categ_seg_concat     
+      , fcb_asset_categ                
+      , fcb_asset_subcateg             
+      , fcb_asset_categ_fam            
+      , fcb_asset_categ_fakey          
+      , rcv_quantity                   
+      , rcv_po_unit_price              
+      , rcv_currency_code              
+      , rcv_currency_conversion_rate   
+      , rcv_currency_conversion_date   
+      , ap_org_company_name            
+      , ap_org_company_rfc             
+      , pol_oracle_cia                 
+      , pol_oracle_ef                  
+      , pol_oracle_cr_superior         
+      , pol_retek_distrito             
+      , pol_oracle_cr                  
+      , rcv_po_header_id               
+      , poh_po_number                  
+      , poh_po_date                    
+      , rcv_po_release_id              
+      , pra_release_num                
+      , rcv_po_line_id                 
+      , pol_po_line_num                
+      , rcv_vendor_id                  
+      , asu_vendor_number              
+      , asu_vendor_name                
+      , rcv_vendor_site_id             
+      , ass_vendor_site_code           
+      , rcv_inv_organization_id        
+      , mtl_inv_organization_code      
+      , poh_org_id                     
+      , hou_org_code                   
+      , rcv_invoice_num                
+      , creation_date                  
+      , created_by                     
+      , last_update_date               
+      , last_updated_by                
+      , last_update_login    
+FROM   apps.xxfa_sn_data_rcv_others	
+WHERE  rcv_source_code = 'DIRECTOS'  
+;
+
+SHOW ERRORS;

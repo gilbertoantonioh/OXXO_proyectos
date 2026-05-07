@@ -1,0 +1,57 @@
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/tree/wip-I25024-MVP2-CHG0137347-XXFC_FA
+APPS_XXFA_SN_TRIPS_PKG_PKS.pks
+APPS_XXFA_SN_TRIPS_PKG_PKB.pkb
+APPS_XXFA_SN_DATA_API_PKG_PKB.pkb
+
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/tree/wip-I25024-MVP2-CHG0137347-DB_views
+APPS_XXFA_SN_TRIPS_V_VW.sql
+APPS_XXFA_SN_TRIPS_COMP_V_VW.sql
+APPS_XXFA_SN_TRIPS_COMP_GRP_V_VW.sql
+
+==========================================================================================================================
+CHG0137347_1
+1. PR from wip to feature
+23 Enero 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/122
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/104
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+2. PR from feature to develop
+23 Enero 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/123
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/105
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+3. Cherrypick to staging
+26 Enero 2026
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/128
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/107
+
+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++
+4. Cherrypick to main
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA/pull/141
+https://github.com/BUS-BackOffice/ORA_EBS_MEX_DB_Views/pull/120
+
+5. PR from wip to feature Homologacion
+BUS-BackOffice/ORA_EBS_MEX_DB_XXFC_FA at feature-I25024-MVP2-CHG0137347
+
+
+2. paso desktop 
+3. colocar el repo, clonarlo antes 
+3.1 Cambiar al branch de feature 
+4. Menu Branch, New Branch:  wip-I25024-MVP2-CHG0140503-ORA_EBS_MEX_DB_XXFC_FA  DESDE FEATURE                   (min 9)
+5. Dar click en Publish Branch
+6. Homologar la wip a desarrollo. Menu Branch, Merge into current branch, seleccionamos origin/develop dar Click en Create a merge commit
+7. Resolver conflictos, tenemos que resolver la homogacion. Accept Incoming
+8. Despues de resolver conflictos, se da Continue Merge
+9. Le damos Push 
+10. Hacemos el PR solo de homolgacion hcia la feature 
+11. Luego se va a crear otra wip ya homologada con nuestros cambios. 
+
+
+
+
+
+
+
+
