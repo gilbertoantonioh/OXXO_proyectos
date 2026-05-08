@@ -23,11 +23,38 @@ parameters:
 
 Based on the provided table creation script, generate the following complementary scripts following Oracle EBS standards for OXXO:
 
-1. **Grants Script**: `<Dueño>_<NombreTabla>_GRN.sql` - Grant permissions to APPS and other users.
-2. **Sequence Script** (if applicable): `<Dueño>_<NombreSecuencia>_SEQ.sql` - Create sequence if the table has a numeric primary key.
-3. **AD_ZD Upgrade Script**: Script to execute AD_ZD_TABLE.UPGRADE for the table.
-4. **PL/SQL Table Handler Package**: `<Proyecto>_<Modulo>_<Tabla>_PKG.pks` and `.pkb` - Package with procedures for insert, update, delete, and select operations.
-5. **Table Upgrade Confirmation**: Script to patch the table if needed.
+## Table Structure Pattern (OXXO Standard)
+When a table has a numeric PRIMARY KEY:
+- **TBL.sql**: Define the PK column with `DEFAULT <Proyecto>.<Secuencia>.NEXTVAL NOT NULL`
+- Include `SET DEFINE OFF;` at the beginning
+- Include `TABLESPACE APPS_TS_TX_DATA` in the table definition
+- End with `GRANT ALL ON xxfc.<tabla> TO APPS WITH GRANT OPTION;`
+- **Do NOT include ALTER TABLE constraint in TBL.sql**
+
+## Scripts to Generate
+
+1. **Grants Script**: `<Dueño>_<NombreTabla>_GRN.sql` 
+   - Grant permissions to APPS and other users
+   - Use AD_ZD.GRANT_PRIVS for privilege assignment
+
+2. **Sequence Script** (if applicable): `<Dueño>_<NombreSecuencia>_SEQ.sql`
+   - Create sequence with `NO CACHE` and `ORDER`
+   - Create synonym in APPS: `CREATE SYNONYM APPS.<Secuencia> FOR XXFC.<Secuencia>;`
+   - Grant SELECT to APPS
+
+3. **Primary Key Alter Script**: `<Dueño>_<NombreTabla>_PK.sql` (in `alters/` folder)
+   - Add constraint with `USING INDEX TABLESPACE APPS_TS_TX_IDX`
+   - Example: `ALTER TABLE xxfc.<tabla> ADD CONSTRAINT <tabla>_pk PRIMARY KEY (pk_col) USING INDEX TABLESPACE APPS_TS_TX_IDX;`
+
+4. **AD_ZD Upgrade Script**: Script to execute AD_ZD_TABLE.UPGRADE for the table
+   - Execute `EXEC AD_ZD_TABLE.UPGRADE('XXFC', '<TABLA>');`
+   - Assign privileges via AD_ZD
+
+5. **PL/SQL Table Handler Package**: `<Proyecto>_<Modulo>_<Tabla>_PKG.pks` and `.pkb`
+   - Package with procedures for insert, update, delete, and select operations
+   - Use proper error handling with FND_MESSAGE and APP_EXCEPTION
+
+6. **Table Upgrade Confirmation**: Script to verify synonym and grants exist
 
 Use the following inputs:
 - Table Script: {table_script}
