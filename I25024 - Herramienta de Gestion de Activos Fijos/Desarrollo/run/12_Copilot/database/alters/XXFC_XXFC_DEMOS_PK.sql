@@ -1,0 +1,6 @@
+SET DEFINE OFF;
+PROMPT ALTER TABLE xxfc.xxfc_demos ADD PRIMARY KEY xxfc_demos_pk
+
+ALTER TABLE xxfc.xxfc_demos
+ADD   CONSTRAINT xxfc_demos_pk
+      PRIMARY KEY (demo_id) USING INDEX TABLESPACE APPS_TS_TX_IDX;
