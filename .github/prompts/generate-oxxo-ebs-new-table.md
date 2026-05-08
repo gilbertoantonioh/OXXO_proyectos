@@ -54,7 +54,13 @@ When a table has a numeric PRIMARY KEY:
    - Package with procedures for insert, update, delete, and select operations
    - Use proper error handling with FND_MESSAGE and APP_EXCEPTION
 
-6. **Table Upgrade Confirmation**: Script to verify synonym and grants exist
+6. **APPSVIEW Synonyms Script**: `APPSVIEW_<Proyecto>_<NombreTabla>_SYN.sql` (in `synonyms/` folder)
+   - Create synonym in APPSVIEW schema pointing to APPS synonym
+   - Pattern: `CREATE OR REPLACE SYNONYM appsview.<tabla> FOR apps.<tabla>;`
+   - **Important**: Use short table name only (e.g., `xxfc_demos`, NOT `xxfc_xxfc_demos`)
+   - Include `SET DEFINE OFF;` at beginning
+
+7. **Table Upgrade Confirmation**: Script to verify synonym and grants exist
 
 Use the following inputs:
 - Table Script: {table_script}
